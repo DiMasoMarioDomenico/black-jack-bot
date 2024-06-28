@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calcolatore</title>
+    <script>
+        function calculate() {
+            const expression = document.getElementById('expression').value;
+            try {
+                const result = eval(expression);
+                document.getElementById('result').innerText = 'Risultato: ' + result;
+            } catch (error) {
+                document.getElementById('result').innerText = 'Errore: ' + error.message;
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Calcolatore</h1>
+    <input type="text" id="expression" placeholder="Inserisci espressione">
+    <button onclick="calculate()">Calcola</button>
+    <p id="result"></p>
+</body>
+</html>
