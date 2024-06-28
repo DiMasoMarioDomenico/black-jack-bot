@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Calcolatore Blackjack</title>
     <style>
         body {
@@ -29,12 +29,16 @@
             font-size: 1.5em;
             text-align: center;
         }
-        .container button {
+        .container button, .container input {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
             border-radius: 5px;
-            border: none;
+            border: 1px solid #ccc;
+            font-size: 16px; /* Dimensione del font maggiore per evitare zoom */
+            height: 40px; /* Altezza maggiore per evitare zoom */
+        }
+        .container button {
             background-color: #007bff;
             color: white;
             cursor: pointer;
@@ -166,9 +170,9 @@
             <button onclick="selectHandType('pairs')">Coppia</button>
         </div>
         <div id="selectedHandType" style="text-align: center; margin-top: 10px;">Standard</div>
-        <label for="handValue">Valore mano:</label>
+        <label for="handValue">Valore della mano:</label>
         <input type="number" id="handValue" min="1" max="21">
-        <label for="dealerCard">Carta banco:</label>
+        <label for="dealerCard">Carta del banco:</label>
         <input type="number" id="dealerCard" min="2" max="11">
         <button onclick="calculate()">Calcola</button>
         <button class="reset" onclick="reset()">Resetta</button>
