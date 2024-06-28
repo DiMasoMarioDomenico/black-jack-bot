@@ -28,34 +28,42 @@
             font-size: 1.5em;
             text-align: center;
         }
-        .container input, .container select, .container button {
+        .container button {
             width: 100%;
             padding: 10px;
             margin-top: 10px;
             border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-        .container button {
+            border: none;
             background-color: #007bff;
             color: white;
-            border: none;
             cursor: pointer;
         }
         .container button:hover {
             background-color: #0056b3;
         }
-        .container .reset {
+        .container button.reset {
             background-color: #6c757d;
         }
-        .container .reset:hover {
+        .container button.reset:hover {
             background-color: #5a6268;
         }
-        .result {
+        .container .result {
             margin-top: 20px;
             font-size: 1.2em;
             font-weight: bold;
             color: #333;
             text-align: center;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+        .button-group button {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .button-group button:last-child {
+            margin-right: 0;
         }
     </style>
     <script>
@@ -100,14 +108,19 @@
             }
         };
 
-        function getAction(playerHandType, playerHandValue, dealerCard) {
+        let selectedHandType = 'hard';
+
+        function getAction(playerHandValue, dealerCard) {
+            if (selectedHandType === 'hard' && playerHandValue >= 18) {
+                return 'stai';
+            }
             const dealerIndex = dealerCard - 2;
 
-            if (playerHandType === 'hard') {
+            if (selectedHandType === 'hard') {
                 return blackjackStrategy['hard'][playerHandValue][dealerIndex];
-            } else if (playerHandType === 'soft') {
+            } else if (selectedHandType === 'soft') {
                 return blackjackStrategy['soft'][playerHandValue][dealerIndex];
-            } else if (playerHandType === 'pairs') {
+            } else if (selectedHandType === 'pairs') {
                 return blackjackStrategy['pairs'][playerHandValue][dealerIndex];
             } else {
                 return 'Errore';
@@ -115,31 +128,35 @@
         }
 
         function calculate() {
-            const handType = document.getElementById('handType').value;
             const handValue = document.getElementById('handValue').value;
             const dealerCard = document.getElementById('dealerCard').value;
 
-            const action = getAction(handType, handValue, dealerCard);
+            const action = getAction(handValue, dealerCard);
             document.getElementById('result').innerText = `Azione consigliata: ${action}`;
         }
 
+        function selectHandType(type) {
+            selectedHandType = type;
+            document.getElementById('selectedHandType').innerText = type.charAt(0).toUpperCase() + type.slice(1);
+        }
+
         function reset() {
-            document.getElementById('handType').value = 'hard';
             document.getElementById('handValue').value = '';
             document.getElementById('dealerCard').value = '';
             document.getElementById('result').innerText = '';
+            selectHandType('hard');
         }
     </script>
 </head>
 <body>
     <div class="container">
         <h1>Calcolatore Blackjack</h1>
-        <label for="handType">Tipo di mano:</label>
-        <select id="handType">
-            <option value="hard">Hard</option>
-            <option value="soft">Soft</option>
-            <option value="pairs">Pairs</option>
-        </select>
+        <div class="button-group">
+            <button onclick="selectHandType('hard')">Standard</button>
+            <button onclick="selectHandType('soft')">Soft</button>
+            <button onclick="selectHandType('pairs')">Coppia</button>
+        </div>
+        <div id="selectedHandType" style="text-align: center; margin-top: 10px;">Standard</div>
         <label for="handValue">Valore della mano:</label>
         <input type="number" id="handValue" min="1" max="21">
         <label for="dealerCard">Carta del banco:</label>
