@@ -23,8 +23,8 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             width: 100%;
-            text-align: center; /* Aggiunto per centrare il testo */
-            margin-top: 20px; /* Margine superiore */
+            text-align: center;
+            margin-top: 20px;
             box-sizing: border-box;
         }
         .container h1 {
@@ -37,8 +37,8 @@
             margin-top: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
-            font-size: 16px; /* Dimensione del font maggiore per evitare zoom */
-            height: 40px; /* Altezza maggiore per evitare zoom */
+            font-size: 16px;
+            height: 40px;
             box-sizing: border-box;
         }
         .container button {
@@ -175,8 +175,8 @@
         <div id="selectedHandType" style="text-align: center; margin-top: 10px;">Standard</div>
         <label for="handValue">Valore della mano:</label>
         <input type="number" id="handValue" min="1" max="21">
-        <label for="dealerCard">Carta del banco (2-10, J, Q, K, A):</label>
-        <input type="text" id="dealerCard" maxlength="1">
+        <label for="dealerCard">Carta del banco (2-10, A):</label>
+        <input type="text" id="dealerCard" maxlength="2">
         <button onclick="calculate()">Calcola</button>
         <button class="reset" onclick="reset()">Resetta</button>
         <div class="result" id="result"></div>
