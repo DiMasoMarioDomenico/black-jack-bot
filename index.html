@@ -3,23 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calcolatore</title>
+    <title>Calcolatore Blackjack</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .container h1 {
+            margin-top: 0;
+        }
+        .container input, .container select, .container button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
     <script>
-        function calculate() {
-            const expression = document.getElementById('expression').value;
-            try {
-                const result = eval(expression);
-                document.getElementById('result').innerText = 'Risultato: ' + result;
-            } catch (error) {
-                document.getElementById('result').innerText = 'Errore: ' + error.message;
+        const blackjackStrategy = {
+            'hard': {
+                18: ['stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai'],
+                17: ['stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai'],
+                16: ['stai', 'stai', 'stai', 'stai', 'stai', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                15: ['stai', 'stai', 'stai', 'stai', 'stai', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                14: ['stai', 'stai', 'stai', 'stai', 'stai', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                13: ['stai', 'stai', 'stai', 'stai', 'stai', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                12: ['carta', 'carta', 'stai', 'stai', 'stai', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                11: ['raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'carta'],
+                10: ['raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'carta', 'carta'],
+                9: ['carta', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                8: ['carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                7: ['carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                6: ['carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                5: ['carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta', 'carta'],
+            },
+            'soft': {
+                20: ['stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai'],
+                19: ['stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai'],
+                18: ['stai', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'stai', 'stai', 'carta', 'carta', 'carta'],
+                17: ['carta', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                16: ['carta', 'carta', 'raddoppia', 'raddoppia', 'raddoppia', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                15: ['carta', 'carta', 'raddoppia', 'raddoppia', 'raddoppia', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                14: ['carta', 'carta', 'carta', 'raddoppia', 'raddoppia', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                13: ['carta', 'carta', 'carta', 'raddoppia', 'raddoppia', 'carta', 'carta', 'carta', 'carta', 'carta'],
+            },
+            'pairs': {
+                'AA': ['dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi'],
+                '10': ['stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai', 'stai'],
+                '9': ['dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'stai', 'dividi', 'dividi', 'stai', 'stai'],
+                '8': ['dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi'],
+                '7': ['dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'carta', 'carta', 'carta', 'carta'],
+                '6': ['dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                '5': ['raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'raddoppia', 'carta', 'carta'],
+                '4': ['carta', 'carta', 'carta', 'dividi', 'dividi', 'carta', 'carta', 'carta', 'carta', 'carta'],
+                '3': ['dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'carta', 'carta', 'carta', 'carta'],
+                '2': ['dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'dividi', 'carta', 'carta', 'carta', 'carta'],
             }
+        };
+
+        function getAction(playerHandType, playerHandValue, dealerCard) {
+            const dealerIndex = dealerCard - 2;
+
+            if (playerHandType === 'hard') {
+                return blackjackStrategy['hard'][playerHandValue][dealerIndex];
+            } else if (playerHandType === 'soft') {
+                return blackjackStrategy['soft'][playerHandValue][dealerIndex];
+            } else if (playerHandType === 'pairs') {
+                return blackjackStrategy['pairs'][playerHandValue][dealerIndex];
+            } else {
+                return 'Errore';
+            }
+        }
+
+        function calculate() {
+            const handType = document.getElementById('handType').value;
+            const handValue = document.getElementById('handValue').value;
+            const dealerCard = document.getElementById('dealerCard').value;
+
+            const action = getAction(handType, handValue, dealerCard);
+            document.getElementById('result').innerText = `Azione consigliata: ${action}`;
         }
     </script>
 </head>
 <body>
-    <h1>Calcolatore</h1>
-    <input type="text" id="expression" placeholder="Inserisci espressione">
-    <button onclick="calculate()">Calcola</button>
-    <p id="result"></p>
+    <div class="container">
+        <h1>Calcolatore Blackjack</h1>
+        <label for="handType">Tipo di mano:</label>
+        <select id="handType">
+            <option value="hard">Hard</option>
+            <option value="soft">Soft</option>
+            <option value="pairs">Pairs</option>
+        </select>
+        <label for="handValue">Valore della mano:</label>
+        <input type="number" id="handValue" min="1" max="21">
+        <label for="dealerCard">Carta del banco:</label>
+        <input type="number" id="dealerCard" min="2" max="11">
+        <button onclick="calculate()">Calcola</button>
+        <div class="result" id="result"></div>
+    </div>
 </body>
 </html>
